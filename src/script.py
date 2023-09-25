@@ -1,7 +1,6 @@
 from mininet.topo import Topo
 
-class MyTopo( Topo ): 
-
+class MyTopo( Topo ):
     def setup_switches(self):
         switches = []
 

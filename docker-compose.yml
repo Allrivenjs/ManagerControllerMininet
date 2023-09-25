@@ -6,6 +6,8 @@ services:
       context: .
     image: iwaseyusuke/mininet:ubuntu-22.04  #latest
     privileged: true
+    volumes:
+      - ./src:/root/src
     tty: true
     container_name: mininet
     command: /bin/bash
@@ -42,8 +44,11 @@ services:
   ryu:
     image: osrg/ryu
     container_name: ryu
+    privileged: true
+    stdin_open: true
+    tty: true
     ports:
-      - "6633:6633"  # Puerto OpenFlow (usado por Ryu)
+      - "6634:6633"  # Puerto OpenFlow (usado por Ryu)
     networks:
       mininet-net:
         ipv4_address: 10.0.0.4
