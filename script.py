@@ -37,15 +37,7 @@ class MyTopo( Topo ):
             for element in connection_tree[key]:
                 self.addLink( key, element )
 
-    def __init__( self ):
-        # Initialize topology
-        Topo.__init__( self )
-
-        hosts = self.setup_hosts()
-        switches = self.setup_switches()
-
-        connection_tree = {}
-
+    def fill_switches(self, switches, hosts, connection_tree):
         for switch in switches:
             switches_copy = switches.copy()
             switches_copy.remove(switch)
@@ -56,13 +48,16 @@ class MyTopo( Topo ):
             print("Hosts disponibles")
             print(hosts)
 
-            element_to_connect = input(f"Con que elemento desea conectar el switch {switch}:>_ ")
+            input_string = input(f"Con que elementos desea conectar el switch {switch}:>_ ")
+            elements_to_connect = input_string.split()
 
-            if element_to_connect in switches or element_to_connect in hosts:
-                self.connect_elemets(switch, element_to_connect, connection_tree)
-            else:
-                print("Elemento desconocido")
+            for element in elements_to_connect:
+                if element in switches or element in hosts:
+                    self.connect_elemets(switch, element, connection_tree)
+                else:
+                    print("Elemento desconocido")
 
+    def fill_hosts(self, switches, hosts, connection_tree):
         for host in hosts:
             hosts_copy = hosts.copy()
             hosts_copy.remove(host)
@@ -73,12 +68,28 @@ class MyTopo( Topo ):
             print("Hosts disponibles")
             print(hosts_copy)
 
-            element_to_connect = input(f"Con que elemento desea conectar el host {host}:>_ ")
+            input_string = input(f"Con que elemento desea conectar el host {host}:>_ ")
+            elements_to_connect = input_string.split()
 
-            if element_to_connect in switches or element_to_connect in hosts:
-                self.connect_elemets(host, element_to_connect, connection_tree)
-            else:
-                print("Elemento desconocido")
+            for element in elements_to_connect:
+                if element in switches or element in hosts:
+                    self.connect_elemets(host, element, connection_tree)
+                else:
+                    print("Elemento desconocido")
+        
+
+    def __init__( self ):
+        # Initialize topology
+        Topo.__init__( self )
+
+        hosts = self.setup_hosts()
+        switches = self.setup_switches()
+
+        connection_tree = {}
+
+        self.fill_switches(switches, hosts, connection_tree)
+        self.fill_hosts(switches, hosts, connection_tree)
+
 
         print(connection_tree)
 
