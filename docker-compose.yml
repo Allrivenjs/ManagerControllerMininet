@@ -10,7 +10,10 @@ services:
       - ./src:/root/src
     tty: true
     container_name: mininet
-    command: /bin/bash
+    command:
+      - '/bin/bash'
+      - '-c'
+      - 'apt-get update && apt-get install -y --no-install-recommends pip && pip install click'
     environment:
       - DISPLAY
     ports:
