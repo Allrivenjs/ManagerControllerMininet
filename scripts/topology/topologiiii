@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+from select import poll, POLLIN
+from mininet.node import Host
+from mininet.topo import Topo
+from mininet.util import quietRun
+from mininet.log import error
+
+#  Crear for para pedir los datos donde crearemos los switch y los hosts para mininet
+
+class SingleRed( Topo ):
+    "Single switch connected to n hosts."
+    def build( self ):
+        self.switch = {}
+        self.start()
+
+    def CountNumberHost( self ):
+        self.count = 0
+        for i in self.switch:
+            for j in self.switch[i]["host"]:
+                count = count + 1
+
+
+    def start( self ):
+        while True:
+            print("Desea crear un switch? y/n")
+            if (str(input()) == 'y'):
+                print("Ingrese el numero de switch que desea crear")
+                switch = int(input())
+                for h in range(switch):
+                    name = 's%d' % (h + 1)
+                    s = self.addSwitch(name)
+                    print("Ingrese el numero de host que desea crear")
+                    self.switch[name] = {'name': name, 'host': []}
+                    print(self.switch)
+                    self.switch[name]['host'] = []
+                    host = int(input())
+                    if (host > 0):
+                        hosts = {}
+                        for i in range(host):
+                            namehost = 'h%d' % (i + 1)
+                            hos = self.addHost( namehost )
+                            self.addLink( hos, s )
+                            hosts[namehost] = hos
+                        self.switch[name]['host'].append(hosts)
+                    self.switch[name] = s
+                continue
+
+            print("Desea hacer una conexion entre switch? y/n")
+            if (str(input()) == 'y'):
+                # imprimir los nodos existentes
+                for n in self.switch:
+                    print(n)
+                print("Ingrese el nombre del switch de origen")
+                origen = str(input())
+                print("Ingrese el nombre del switch de destino")
+                destino = str(input())
+                self.addLink(origen, destino)
+                continue
+            print("Iniciar red? y/n")
+            if (str(input()) == 'y'):
+                break
+        
+
+            
+if __name__ == '__main__':
+    import sys
+    from functools import partial
+
+    from mininet.net import Mininet
+    from mininet.cli import CLI
+    from mininet.topo import SingleSwitchTopo
+    from mininet.log import setLogLevel
+    from mininet.node import OVSController
+
+    setLogLevel( 'info' )
+    net = Mininet( topo=SingleRed(),  controller = OVSController)
+    net.start()
+    CLI( net )
+    net.stop()
+            
+        
+       
+
+    
