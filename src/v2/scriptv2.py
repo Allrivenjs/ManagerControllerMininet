@@ -104,22 +104,22 @@ class MyTopo( Topo ):
 
 if __name__ == '__main__':
     # Tell mininet to print useful information
-    setLogLevel('info')
 
     ip_address = input("Ingrese la ip del controlador remoto:>_ ")
     port = input("Ingrese el puerto del controlador remoto:>_ ")
 
     topo = MyTopo()
 
+    setLogLevel('info')
     net = Mininet(topo=topo,
+        controller=RemoteController(
+            name='c0', ip=ip_address, port=int(port)
+        ),)
 
-        controller=None,
-        autoStaticArp=True)
-
-    net.addController("c0",
-        controller=RemoteController,
-        ip=ip_address,
-        port=int(port))
+#    net.addController("c0",
+#       controller=RemoteController,
+#       ip=ip_address,
+#       port=int(port))
 
     net.start()
     CLI(net)
